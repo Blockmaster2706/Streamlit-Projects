@@ -47,8 +47,6 @@ st.write(display_word)
 availableletters = lambda: [i for i in "abcdefghijklmnopqrstuvwxyz" if i not in guessed]
 # give a selection box for all letters that have not yet been guessed
 
-guess = ""
-
 def make_up_to_10_buttons(letters: list):
     
     col: list = st.columns(10)
@@ -84,32 +82,15 @@ while letters_to_show.__len__() > 0:
         
         if letters_to_show is None: break
 
-        
-        
-button_cols = st.columns(4)
-
 # give a reset button next to the guess button
-with button_cols[0]:
-    if st.button("Reset"):
-        st.session_state["word"] = random.choice(words)
-        st.session_state["guessed"] = []
-        st.session_state["tries"] = 7
-        st.session_state["state"] = "playing"
+if st.button("Reset"):
+    st.session_state["word"] = random.choice(words)
+    st.session_state["guessed"] = []
+    st.session_state["tries"] = 7
+    st.session_state["state"] = "playing"
 
-        st.rerun()
+    st.rerun()
 
-with button_cols[1]:
-    if st.button("Guess!") & (st.session_state["state"] == "playing"):
-
-        guessed.append(guess)
-
-        if guess in word:
-            st.write("Correct!")
-        else:
-            st.write("Incorrect!")
-            st.session_state["tries"] -= 1
-
-        st.rerun()
 
 if "_" not in display_word:
     st.write("You win!")
