@@ -37,7 +37,13 @@ if guessed_letters_string.endswith(", "):
 st.write("Guessed letters: ", guessed_letters_string)
 
 # write the current word, replacing all unguessed letters with an underscore
-display_word = " ".join([i if i in guessed else "_" for i in word])
+display_word = ""
+
+for i in word:
+    if i in guessed or i in " ":
+        display_word += i
+    else:
+        display_word += "_"
 
 if display_word[0] == "_":
     display_word = "\\" + display_word
@@ -90,7 +96,6 @@ if st.button("Reset"):
     st.session_state["state"] = "playing"
 
     st.rerun()
-
 
 if "_" not in display_word:
     st.write("You win!")
