@@ -10,7 +10,8 @@ st.write('''<style>
 </style>''', unsafe_allow_html=True)
 
 # make a word array that is every fruit in the world
-words = ["apple", "banana", "cherry", "durian", "elderberry", "fig", "grape", "honeydew", "imbe", "jackfruit", "kiwi", "lime", "mango", "nectarine", "orange", "papaya", "quince", "raspberry", "strawberry", "tangerine", "ugli", "vanilla", "watermelon", "xigua", "yuzu", "zucchini"]
+# words = ["apple", "banana", "cherry", "durian", "elderberry", "fig", "grape", "honeydew", "imbe", "jackfruit", "kiwi", "lime", "mango", "nectarine", "orange", "papaya", "quince", "raspberry", "strawberry", "tangerine", "ugli", "vanilla", "watermelon", "xigua", "yuzu", "zucchini"]
+words = ['Tom Trench', 'Vaggie', 'Lilith', 'Charlie', 'Vox', 'Molly', 'Sir Pentious', 'Lucifer', 'Alastor', 'Cherri Bomb', 'Velvet', 'Angel Dust', 'Niffty', 'Fat Nuggets', 'Valentino', 'Razzle and Dazzle', 'Katie Killjoy', 'Husk', 'Egg Bois', 'Rosie']
 
 if "word" not in st.session_state.keys():
     st.session_state["word"] = random.choice(words)
@@ -40,10 +41,12 @@ st.write("Guessed letters: ", guessed_letters_string)
 display_word = ""
 
 for i in word:
-    if i in guessed or i in " ":
+    if i in guessed:
         display_word += i
+    elif i == " ":
+        display_word += " | "
     else:
-        display_word += "_"
+        display_word += "_ "
 
 if display_word[0] == "_":
     display_word = "\\" + display_word
@@ -64,6 +67,7 @@ def make_up_to_10_buttons(letters: list):
                     if st.session_state["state"] == "playing":
 
                         guessed.append(letters[i])
+                        guessed.append(letters[i].upper())
 
                         if letters[i] in word:
                             st.write("Correct!")
@@ -103,6 +107,6 @@ if "_" not in display_word:
     st.stop()
 
 if tries == 0:
-    st.write("You lose!")
+    st.write("You lose! The Word was: " + word)
     st.session_state["state"] = "lost"
     st.stop()
