@@ -2,3 +2,5 @@ cloudflare.pem
 cloudflare.key
 venv/*
 .streamlit/*
+build/*
+dist/*

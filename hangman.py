@@ -6,7 +6,7 @@ import base64
 def Reset():
     st.session_state["word"] = random.choice(get_wordlist())
     st.session_state["guessed"] = []
-    st.session_state["tries"] = 7
+    st.session_state["tries"] = 9
     st.session_state["state"] = "playing"
     st.session_state["input_word"] = ""
     st.session_state.input = ""
@@ -15,16 +15,6 @@ def Reset():
 def list_callback():
     st.session_state["old_list"] = st.session_state["selected_list"]
     st.session_state["selected_list"] = st.session_state.new_list
-
-def Solve():
-    input = st.session_state["input_word"]
-    if input == word:
-        for i in input.lower():
-            if i not in guessed:
-                guessed.append(i)
-                guessed.append(i.upper())
-    elif input != "":
-        st.session_state["tries"] -= 1
 
 st.write('''<style>
 [data-testid="column"] {
@@ -48,7 +38,7 @@ def get_wordlist():
 if "word" not in st.session_state.keys():
     st.session_state["word"] = random.choice(get_wordlist())
     st.session_state["guessed"] = []
-    st.session_state["tries"] = 7
+    st.session_state["tries"] = 9
     st.session_state["state"] = "playing"
     st.session_state["selected_list"] = "Fruits"
     st.session_state["input_word"] = ""
@@ -141,6 +131,16 @@ while letters_to_show.__len__() > 0:
 
 columns: list = st.columns([1, 1, 8])
 
+def Solve(input: str):
+    if input == word and st.session_state["state"] == "playing":
+        for i in input.lower():
+            if i not in guessed:
+                guessed.append(i)
+                guessed.append(i.upper())
+        st.rerun()
+    elif input != "":
+        st.session_state["tries"] -= 1
+
 # give a reset button next to the guess button
 with columns[0]:
     if st.button("Reset"):
@@ -148,13 +148,27 @@ with columns[0]:
 
         st.rerun()
 with columns[1]:
-    st.write("Solve:")
+    st.text_input("Word to solve for", key="input", label_visibility="collapsed")
 with columns[2]:
-    st.session_state["input_word"] = st.text_input("Word to solve for", key="input", label_visibility="collapsed", on_change=Solve())
+    if st.button("Solve"):
+        Solve(st.session_state.input)
 
 if "_" not in display_word:
     st.write("You win!")
     st.session_state["state"] = "won"
+
+    stage = abs(tries - 9)
+
+    file_ = open("./HangmanImages/{}Win.gif".format(stage), "rb")
+    contents = file_.read()
+    data_url = base64.b64encode(contents).decode("utf-8")
+    file_.close()
+
+    st.markdown(
+        f'<img src="data:image/gif;base64,{data_url}" alt="cat gif">',
+        unsafe_allow_html=True,
+    )
+
     st.stop()
 
 if tries == 0:
@@ -172,3 +186,5 @@ if tries == 0:
     )
     st.stop()
 
+if tries < 9 and "_" in display_word:
+    st.image("./HangmanImages/{}.png".format(abs(tries - 8)))
